@@ -1,0 +1,16 @@
+.input-box-icon-big {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  transition: opacity 0.218s ease-in;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.input-box-icon-big img {
+    width: 100%;
+    height: 100%;
+  opacity: 0.71;
+}
+.input-box-icon-big:hover{
+    background-color: #f0f0f0;
+}

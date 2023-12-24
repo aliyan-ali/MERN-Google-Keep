@@ -1,0 +1,26 @@
+.navbar-right-side{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.navbar-right-side p {
+    color: gray;
+}
+.navbar-right-side span {
+    color: rgb(22, 22, 22);
+    font-size: 1.3rem;
+    padding: 0px 40px 0px 10px;
+    font-weight: bolder;
+    text-transform: capitalize;
+}
+.btn-logout {
+    border: 1px solid #FABC0B;
+    padding: 5px 10px;
+    font-size: 1.3rem;
+    color: black;
+    border-radius: 7px;
+}
+.btn-logout:hover {
+    border:1px solid #FABC0B;
+    color: black;
+}

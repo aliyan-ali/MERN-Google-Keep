@@ -1,0 +1,28 @@
+.left-side-bar {
+  padding: 10px 0px;
+  width: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  height: calc(100vh);
+  position: relative;
+  overflow: hidden;
+  transition: width 0.5 ease-in-out;
+  background-color: white;
+  top: 65px;
+  position: fixed;
+}
+.left-side-bar .license p {
+  padding: 10px 15px;
+  font-size: 10px;
+  font-style: italic;
+  color: #333;
+  text-align: center;
+  background-color: white;
+  display: block;
+}
+.left-side-bar:hover {
+  width: 280px;
+  box-shadow: 0px 0px 14px -4px  #000;
+}

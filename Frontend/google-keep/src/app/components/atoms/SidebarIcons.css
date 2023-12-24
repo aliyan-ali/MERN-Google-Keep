@@ -1,0 +1,28 @@
+.side-icons{
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  height: 48px;
+  min-height: 48px;
+  transition: all 0.5s ease-in-out;
+  border-radius: 0 25px 25px 0;
+  cursor: pointer;
+}
+.side-icons:hover {
+  background-color: #f0f0f0;
+}
+
+.side-icons .iconsCom img {
+  margin-left: 30px;
+}
+
+.text {
+  color: #5f6368;
+  line-height: 1.2rem;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.side-icons p {
+  width: 100%;
+}
