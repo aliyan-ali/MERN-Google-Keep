@@ -1,4 +1,4 @@
-#MERN-Google-Keep
+# MERN-Google-Keep
 This repository contains a clone of Google Keep, a note-taking application. The project replicates the core functionalities of Google Keep, allowing users to create, manage, and organize notes with ease.
 
 Features:
