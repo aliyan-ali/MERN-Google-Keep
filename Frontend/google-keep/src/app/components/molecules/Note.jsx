@@ -9,6 +9,7 @@ import archiveIcon from "../atoms/img/archiveIcon.svg";
 import moreIcon from "../atoms/img/moreIcon.svg";
 import { UserContext } from "../Context/ContextProvider";
 import axios from "axios";
+import { SearchContext } from "../Context/SearchProvider";
 
 const Card = () => {
   const [title, setTitle] = useState("");
@@ -16,17 +17,17 @@ const Card = () => {
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
   const [editNote, setEditNote] = useState(null);
-  const [notes, setNotes] = useState([]);
+  // const [notes, setNotes] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [filteredNotes, setFilteredNotes] = useState([]);
+  // const [filteredNotes, setFilteredNotes] = useState([]);
   const { user } = useContext(UserContext);
-  // console.log(user._id)
+  const { searchQuery, filteredNotes, handleSearch, notes, setNotes } =
+    useContext(SearchContext);
 
   const handleAddNote = async () => {
-    if(!user){
-    console.log("Plese log in to add notes")
-    
-    }else if (user && (title || content)) {
+    if (!user) {
+      console.log("Plese log in to add notes");
+    } else if (user && (title || content)) {
       try {
         const response = await axios.post(
           "http://localhost:5599/api/user/add-note",
@@ -36,7 +37,7 @@ const Card = () => {
             content,
           }
         );
-        console.log("addeed note"+ response )
+        console.log("addeed note" + response);
         // Handle response accordingly
       } catch (error) {
         // Handle error
@@ -47,41 +48,8 @@ const Card = () => {
       getUserNotes();
     }
   };
-  // console.log("Note added  for " + title +content );
- // admin configuration 
 
-  // useEffect(() => {
-  //   if (user) {
-  //     if (user.role === "admin") {
-  //       console.log(user);
-  //       console.log("Fetching notes for admin...", user.role);
-  //       const q = query(collection(firestore, "notes"));
-
-  //       onSnapshot(q, (querySnapshot) => {
-  //         const notesData = [];
-  //         querySnapshot.forEach((doc) => {
-  //           notesData.push({ ...doc.data(), id: doc.id });
-  //         });
-  //         setNotes(notesData);
-  //       });
-  //     } else {
-  //       console.log("Fetching notes for regular user...");
-  //       const q = query(
-  //         collection(firestore, "notes"),
-  //         where("ownerid", "==", user.userId)
-  //       );
-
-  //       onSnapshot(q, (querySnapshot) => {
-  //         const notesData = [];
-  //         querySnapshot.forEach((doc) => {
-  //           notesData.push({ ...doc.data(), id: doc.id });
-  //         });
-  //         setNotes(notesData);
-  //       });
-  //     }
-  //   }
-  // }, [user]);
-
+  //get all notes for admin
   const getUserNotes = async () => {
     if (user) {
       if (user.role === "admin") {
@@ -91,6 +59,7 @@ const Card = () => {
           const response = await axios.get(
             "http://localhost:5599/api/user/get-all-notes"
           );
+
           setNotes(response.data);
         } catch (error) {
           console.error("Failed to fetch user notes", error.message);
@@ -107,14 +76,13 @@ const Card = () => {
           console.error("Failed to fetch user notes", error.message);
           return [];
         }
-        console.log(notes)
+        console.log(notes);
       }
     }
   };
   useEffect(() => {
     getUserNotes();
   }, [user]);
-  
 
   const handleEditNote = async () => {
     if (!user) {
@@ -125,13 +93,13 @@ const Card = () => {
     if (editTitle || editContent) {
       if (editNote) {
         try {
-           const response = await axios.patch(
-             `http://localhost:5599/api/user/edit-note/${editNote._id}`,
-             {
-               title: editTitle,
-               content: editContent
-             }
-           );
+          const response = await axios.patch(
+            `http://localhost:5599/api/user/edit-note/${editNote._id}`,
+            {
+              title: editTitle,
+              content: editContent,
+            }
+          );
 
           console.log("Note updated with ID: ", editNote.id);
         } catch (error) {
@@ -141,7 +109,6 @@ const Card = () => {
         setEditTitle("");
         setEditContent("");
         getUserNotes();
-
       }
     }
   };
@@ -156,8 +123,7 @@ const Card = () => {
             `http://localhost:5599/api/user/delete-note/${note._id}`
           );
           console.log("Note deleted with ID: ", note.id);
-        getUserNotes();
-
+          getUserNotes();
         } catch (error) {
           console.error("Error deleting note: ", error);
         }
@@ -168,7 +134,6 @@ const Card = () => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleAddNote();
-
     }
   };
 
@@ -196,6 +161,16 @@ const Card = () => {
 
   return (
     <div className="container">
+      {user && user.role === "admin" ? (
+        <>
+          <div
+            className="alert alert-warning alert-dismissible fade show"
+            role="alert"
+          >
+            <strong>Admin account!</strong> You can add, edit and delete notes.
+          </div>
+        </>
+      ) : null}
       <div className="noteCard">
         <input
           type="text"
@@ -227,7 +202,8 @@ const Card = () => {
         </div>
       </div>
       <div className="notesGrid">
-        {notes.map((note, index) => (
+        {filteredNotes.length > 0 ? (
+        filteredNotes.map((note, index) => (
           <div key={index} className="note" onClick={() => openEditModal(note)}>
             <h2>{note.title}</h2>
             <p>{note.content}</p>
@@ -242,7 +218,24 @@ const Card = () => {
               </div>
             </div>
           </div>
-        ))}
+                ))
+      ) : (
+         notes.map((note, index) => (
+          <div key={index} className="note" onClick={() => openEditModal(note)}>
+            <h2>{note.title}</h2>
+            <p>{note.content}</p>
+            <div className="note_icon">
+              <div className="iconCom">
+                <NoteIcons icon={addIcon} alttxt="addIcon-svg" />
+                <NoteIcons icon={personaddIcon} alttxt="personaddIcon-svg" />
+                <NoteIcons icon={paintIcon} alttxt="paintIcon-svg" />
+                <NoteIcons icon={imgIcon} alttxt="imgIcon-svg" />
+                <NoteIcons icon={archiveIcon} alttxt="archiveIcon-svg" />
+                <NoteIcons icon={moreIcon} alttxt="moreIcon-svg" />
+              </div>
+            </div>
+          </div>
+        ))) }
         {isModalOpen && (
           <div className="modalOverlay">
             <div className="modalContent" onClick={(e) => e.stopPropagation()}>

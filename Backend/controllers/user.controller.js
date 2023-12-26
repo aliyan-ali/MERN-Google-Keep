@@ -104,8 +104,8 @@ export const getSingleUserNotes = async (req, res) => {
     try {
         const { id } = req.params;
         const userNotes = await Note.find({ ownerId: id })
-        console.log(id)
-        console.log(userNotes);
+        // console.log(id)
+        // console.log(userNotes);
         if (!userNotes) {
             return res.status(404).json({ message: "User not found" })
         }
@@ -141,6 +141,22 @@ export const deleteNote = async (req, res) => {
     }
 };
 
+//get all notes
+
+export const getAllNotes = async (req,res) => {
+    try {
+        const notes = await Note.find()
+        if(!notes){
+            return res.status(404).json({message:"no notes found"})
+        }
+        return res.status(200).json(notes)
+    }catch (error) {
+        return res.status(500).json({ message: error.message })
+
+    }
+}
+
+
 
 
 // for getAllUsers
@@ -172,8 +188,9 @@ export const forgetPassword = async (req, res) => {
         const { email } = req.body;
 
         const user = await User.findOne({ email })
-
-        if (user) {
+        if(!user){
+            return res.status(404).json({message:"user not found"})
+        }else if (user) {
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -195,6 +212,8 @@ export const forgetPassword = async (req, res) => {
             const otpSave = new Otp({ email, otp })
             await otpSave.save();
             return res.status(200).json({ message: "OTP sent successfully" })
+        }else {
+            return res.status(404).json({ message: "server error 1" })
         }
     } catch (error) {
         return res.status(500).json({ message: error.message })

@@ -14,6 +14,7 @@ import {UserContext } from "../Context/ContextProvider";
 
 
 const NavbarRightSide = () => {
+
   //calling contextapi
 
   // const userDisplayName =  useContext(ContextProvider);
@@ -32,6 +33,7 @@ const NavbarRightSide = () => {
         localStorage.removeItem("id");
         setUser(null)
         router.push("/");
+        setUser(null)
         console.log("user logged out Successfully")
 
 
