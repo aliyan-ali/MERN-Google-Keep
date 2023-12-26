@@ -6,6 +6,7 @@ import Styles from './pages.css'
 import {UserProvider} from "@/app/components/Context/ContextProvider";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import SearchProvider from "@/app/components/Context/SearchProvider";
 
 
 function Start() {
@@ -22,11 +23,13 @@ function Start() {
 
         <title>Google Keep </title>
       </Head>
-      <main>
-        <Navbar />
-        <Sidenav />
-        <MainSection />
-      </main>
+      <SearchProvider>
+        <main>
+          <Navbar />
+          <Sidenav />
+          <MainSection />
+        </main>
+      </SearchProvider>
     </>
     // </UserProvider>
   );

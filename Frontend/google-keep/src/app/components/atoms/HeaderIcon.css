@@ -9,6 +9,7 @@
   aspect-ratio: 1;
   padding: 11px;
   cursor: pointer;
+  color: gray !important;
 }
 .icon-box:hover {
   background-color: #f0f0f0;

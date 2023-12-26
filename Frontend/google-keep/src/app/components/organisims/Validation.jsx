@@ -10,8 +10,12 @@ function Validation() {
   const [password, setPassword] = useState("");
   const { setUser } = useContext(UserContext);
   const router = useRouter();
+  const [wrongPassword, setWrongPassword] = useState(false);
+
+
 
   const handleSignup = async () => {
+
         try {
           const response = await axios.post(
             "http://localhost:5599/api/user/login",
@@ -27,7 +31,14 @@ function Validation() {
           // Example: Redirect to the user's profile page
           router.push("/Start");
         } catch (error) {
+
           console.error("Login failed", error.message);
+          setEmail("");
+          setPassword("");
+          setWrongPassword(true);
+          setTimeout(() => {
+          setWrongPassword(false);
+          }, 3000);
         }
   };
   const routeToSignup = () => {
@@ -44,6 +55,7 @@ function Validation() {
         setPassword={setPassword}
         onSubmit={handleSignup}
         route={routeToSignup}
+        wrongPassword={wrongPassword}
       />
     </div>
   );
