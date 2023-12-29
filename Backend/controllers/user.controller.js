@@ -44,9 +44,9 @@ export const login = async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: "wrong password" })
         }
-        const token = jsonwebtoken.sign({ userId: user._id,  username: user.name }, `${process.env.SECRET_KEY}`, { expiresIn: "1hr" })
-        return res.status(200).json({token, user})
-        // return res.status(200).json(user)
+        const token = jsonwebtoken.sign({ _id: user._id,  username: user.name,email:user.email,role:user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "1hr" })
+        // return res.status(200).json({token, user})
+        return res.status(200).json(token)
     } catch (error) {
         res.status(500).json({ message: error.message });
 
@@ -79,22 +79,26 @@ export const login = async (req, res) => {
 // };
 
 
-//storing notes
+
+
+//storing notes and image
 export const saveNote = async (req, res) => {
     try {
         const { title, content, ownerId } = req.body; // Extract necessary data from the request body
+        const imageUrl = req.file ? req.file.filename : null;
         // Create a new note
         const newNote = new Note({
             title,
             content,
-            ownerId // Example: assuming ownerId maps to the user who owns the note
-        });
+            ownerId,
+            imageUrl // Example: assuming ownerId maps to the user who owns the note
+        });    
         await newNote.save(); // Save the new note
-        res.status(201).json(newNote);
+        res.status(200).json(newNote);
     } catch (error) {
         res.status(500).json({ message: error.message });
-    }
-};
+    }    
+};    
 
 
 // for geting  singile user notes
@@ -108,13 +112,15 @@ export const getSingleUserNotes = async (req, res) => {
         // console.log(userNotes);
         if (!userNotes) {
             return res.status(404).json({ message: "User not found" })
-        }
+        }    
         return res.status(200).json(userNotes)
     } catch (error) {
         return res.status(500).json({ message: error.message });
 
-    }
-}
+    }    
+}    
+
+
 
 //update Note 
 
@@ -155,6 +161,30 @@ export const getAllNotes = async (req,res) => {
 
     }
 }
+
+
+
+
+
+
+
+export const getSingleUser = async (req, res) => {
+
+    try {
+        // console.log("users api hit");
+        const { id } = req.params;
+        const user = await User.findOne({ _id: id})
+        if (!user) {
+            return res.status(404).json({ message: "Please signup first" })
+        }
+        // return 
+        return res.status(200).json({ message: "user accessed", user });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+
+    }
+}
+
 
 
 

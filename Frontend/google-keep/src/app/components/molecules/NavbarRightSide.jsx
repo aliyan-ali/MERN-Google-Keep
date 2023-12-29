@@ -9,8 +9,10 @@ import appsIcon from "../atoms/img/appsIcon.svg";
 import useraccountIcon from "../atoms/img/useraccountIcon.svg";
 import { useRouter } from "next/navigation";
 import styles from "./NavbarRightSide.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import {UserContext } from "../Context/ContextProvider";
+import { toast } from "react-toastify";
 
 
 const NavbarRightSide = () => {
@@ -30,10 +32,13 @@ const NavbarRightSide = () => {
   
     function signout () {
         localStorage.removeItem('token');
-        localStorage.removeItem("id");
+        // localStorage.removeItem('user');
+        toast.success("logging out")
         setUser(null)
-        router.push("/");
-        setUser(null)
+        setTimeout(() => {
+          router.push("/");
+          
+        }, 4000);
         console.log("user logged out Successfully")
 
 
