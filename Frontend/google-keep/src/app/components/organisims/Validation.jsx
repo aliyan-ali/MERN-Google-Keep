@@ -4,6 +4,9 @@ import ValidationForm from "../molecules/ValidationForm";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { UserContext } from "../Context/ContextProvider";
+import { jwtDecode } from "jwt-decode";
+
+
 
 function Validation() {
   const [email, setEmail] = useState("");
@@ -25,9 +28,15 @@ function Validation() {
             }
           );
           // console.log(response)
-            const {token , user} = response.data;
-          localStorage.setItem("token", token);
-          setUser(user);
+            const token = response.data
+            
+            localStorage.setItem("token", token);
+            //adding decode
+            const decoded = jwtDecode(token)
+            setUser(decoded) 
+
+          // setUser(user);
+
           // Example: Redirect to the user's profile page
           router.push("/Start");
         } catch (error) {

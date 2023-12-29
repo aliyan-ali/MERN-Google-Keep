@@ -3,17 +3,17 @@ import jwt from "jsonwebtoken"
 
 export const middlewareFunc = (req, res, next) => {
     try {
-        // req.headers.authorization &&
-            // req.headers.authorization.startsWith("Bearer")
-        // const token = req.headers.authorization.split(" ")[1]
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTg1NDU1OGJiNmYxOTY0ZjIxNzMwZmEiLCJ1c2VybmFtZSI6ImFsaSIsImlhdCI6MTcwMzIzOTE0NSwiZXhwIjoxNzAzMjQyNzQ1fQ.BQrONozFDkUax5PKjy9WuIq9aPSlOsQiNOB-fh23YDA'
+        req.headers.authorization &&
+            req.headers.authorization.startsWith("Bearer")
+        const token = req.headers.authorization.split(" ")[1];
+        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTg1NDU1OGJiNmYxOTY0ZjIxNzMwZmEiLCJ1c2VybmFtZSI6ImFsaSIsImlhdCI6MTcwMzIzOTE0NSwiZXhwIjoxNzAzMjQyNzQ1fQ.BQrONozFDkUax5PKjy9WuIq9aPSlOsQiNOB-fh23YDA'
         if (!token) {
-            return res.status(403).json("denied access because you are not authenticated, token not found")
+            return res.status(403).json("denied access because token not valid or token expired")
         }
         jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
             if (err) {
                 return res.status(403).json("you are not authorized" + err)
-            }
+            }   
             req.user = user;
             next();
         })

@@ -16,6 +16,7 @@ app.use(bodyParser.json())
 app.use(cors("*"));
 // app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/api", userRoutes)
+app.use('/uploads', express.static('uploads'));
 // app.use("/", imageRoutes)
 
 mongoose.connect(`mongodb+srv://${userName}:${password}@cluster101.lhmxp9v.mongodb.net/`).then(() => {

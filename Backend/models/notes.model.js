@@ -15,6 +15,10 @@ const noteSchema = new mongoose.Schema({
         type: "string",
         default: "",
         // require: true
+    },
+    imageUrl: {
+        type: "string",
+        default: "",
     }
 })
 
