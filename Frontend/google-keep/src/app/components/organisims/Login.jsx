@@ -5,6 +5,7 @@ import SigninForm from "../molecules/SigninForm";
 import { useRouter } from "next/navigation"; // Correct import
 import {UserContext, } from "../Context/ContextProvider";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 
 function Login() {
@@ -12,7 +13,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const router = useRouter();
-    const { user, setUser }= useContext(UserContext)
+  const { user, setUser }= useContext(UserContext)
 
   const handleSignup = async () => {
     try {
@@ -21,13 +22,17 @@ function Login() {
           email, 
           password
         };
-        const User = await axios.post(
+        const response = await axios.post(
           "http://localhost:5599/api/user/",
           userData
         );
-        console.log(User);
-        setUser(User.data)
-        console.log("user document created in firestore");
+        console.log(response);
+        const token = response.data
+        localStorage.setItem("token", token);
+
+        const decoded = jwtDecode(token);
+        setUser(decoded); 
+        console.log("user document created " , decoded);
         
         setName("");
         setPassword("");
@@ -35,7 +40,7 @@ function Login() {
 
 
 
-      console.log("User signed up:", User);
+      console.log("User signed up:", decoded);
 
       router.push("/Start");
     } catch (error) {

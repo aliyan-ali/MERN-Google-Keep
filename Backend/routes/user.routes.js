@@ -38,10 +38,10 @@ const upload = multer({ storage });
 
 
 router.post("/user/add-note", upload.single("image"), saveNote)
-router.get("/user/get-note/:id" , getSingleUserNotes);
-router.patch("/user/edit-note/:id",  editNote)
-router.delete("/user/delete-note/:id",  deleteNote)
-router.get("/user/get-all-notes", getAllNotes)
+router.get("/user/get-note/:id" , middlewareFunc ,getSingleUserNotes);
+router.patch("/user/edit-note/:id", middlewareFunc,  editNote)
+router.delete("/user/delete-note/:id", middlewareFunc,  deleteNote)
+router.get("/user/get-all-notes", middlewareFunc, getAllNotes)
 // router.post("/setting", createSetting)
 // router.get("/setting", getAllSettings)
 

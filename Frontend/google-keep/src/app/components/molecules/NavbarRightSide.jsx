@@ -1,9 +1,10 @@
 // 'use client'
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Image from "next/image";
 import HeaderIcon from "../atoms/HeaderIcon";
 import refreshIcon from "../atoms/img/refreshIcon.svg";
 import viewlistIcon from "../atoms/img/viewlistIcon.svg";
+import gridIcon from "../atoms/img/grid.svg"
 import settingsIcon from "../atoms/img/settingsIcon.svg";
 import appsIcon from "../atoms/img/appsIcon.svg";
 import useraccountIcon from "../atoms/img/useraccountIcon.svg";
@@ -21,18 +22,19 @@ const NavbarRightSide = () => {
 
   // const userDisplayName =  useContext(ContextProvider);
   const router = useRouter();
-
     
-  const { user,setUser }= useContext(UserContext)
+  const { user, setUser, handleLayoutChange, layout } = useContext(UserContext);
 
-  const display = user?.name;
+  const display = user?.username;
+
+  const [currentIcon, setCurrentIcon] = useState(viewlistIcon);
 
 
-  // console.log(userDisplayName)
+
   
     function signout () {
         localStorage.removeItem('token');
-        // localStorage.removeItem('user');
+        localStorage.removeItem('user');
         toast.success("logging out")
         setUser(null)
         setTimeout(() => {
@@ -40,9 +42,16 @@ const NavbarRightSide = () => {
           
         }, 4000);
         console.log("user logged out Successfully")
-
-
     }
+
+    useEffect(() => {
+      if (layout === "row") {
+        setCurrentIcon(viewlistIcon);
+      } else {
+        setCurrentIcon(gridIcon);
+      }
+    }, [layout]);
+    
 
     
   return (
@@ -52,7 +61,12 @@ const NavbarRightSide = () => {
           Welcome: <span>{display}</span>
         </p>
         <HeaderIcon icon={refreshIcon} title="Refresh" alt="refresh-icon-svg" />
-        <HeaderIcon icon={viewlistIcon} title="List view" alt="view-icon-svg" />
+        <HeaderIcon
+          icon={currentIcon}
+          click={handleLayoutChange}
+          title="List view"
+          alt="view-icon-svg"
+        />
         <HeaderIcon
           icon={settingsIcon}
           title="Settings"
@@ -64,7 +78,9 @@ const NavbarRightSide = () => {
           title="user Account"
           alt="user-account-icon-svg"
         />
-        <button className="btn btn-logout" onClick={signout}>Logout</button>
+        <button className="btn btn-logout" onClick={signout}>
+          Logout
+        </button>
       </div>
     </>
   );

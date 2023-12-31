@@ -292,10 +292,7 @@
   font-size: 0.875rem;
   font-weight: 400;
   padding: 5px 9px;
-
-
-  box-sizing: border-box;
-
+  /* box-sizing: border-box; */
 }
 
 .Bottom_icon {
@@ -323,13 +320,34 @@
 
 .notesGrid {
   margin-left: 100px;
+  margin-right: 100px;
+  width: 80%;
   margin-bottom: 10px;
   align-self: self-start;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
-  width: 80%;
+  flex-wrap: wrap;
 }
+.row {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+}
+
+
+@media (max-width: 889px) {
+  .notesGrid {
+    width: 60%;
+  }
+  .noteCard {
+    width: 60%;
+  }
+}
+
+/* For the column layout */
+.column {
+  grid-template-columns: repeat(1, 1fr) !important;
+}
+
 
 .note {
 
@@ -339,7 +357,6 @@
   padding: 10px;
   height: max-content;
   border-radius: 10px;
-
 
 }
 

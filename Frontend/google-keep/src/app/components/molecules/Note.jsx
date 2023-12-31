@@ -22,16 +22,13 @@ const Card = () => {
   const [editNote, setEditNote] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const { user } = useContext(UserContext);
+  const { user, layout } = useContext(UserContext);
   const { searchQuery, filteredNotes, handleSearch, notes, setNotes } =
-    useContext(SearchContext);
+  useContext(SearchContext);
 
   const router = useRouter();
-  const serverURL = "http://localhost:5599/api/";
-  // const handleImageChange = (e) => {
-  //   const selectedImage = e.target.files[0];
-  //   setImage(selectedImage);
-  // };
+
+
     const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
@@ -274,7 +271,8 @@ const Card = () => {
           </p>
         </div>
       </div>
-      <div className="notesGrid">
+      <div className={`notesGrid ${layout}`}>
+        {console.log(layout)}
         {filteredNotes.length > 0
           ? filteredNotes.map((note, index) => (
               <div
