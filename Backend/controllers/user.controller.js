@@ -20,9 +20,10 @@ export const register = async (req, res) => {
             return res.status(401).json({ message: "User Already Exissts" });
         }
         const hashPassword = await bcrypt.hash(password, 10)
-        const newUser = new User({ email, name,  password: hashPassword });
-        await newUser.save();
-        return res.status(200).json(newUser)
+        const user = new User({ email, name,  password: hashPassword });
+        await user.save();
+        const token = jsonwebtoken.sign({ _id: user._id, username: user.name, email: user.email, role: user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "1hr" })
+        return res.status(200).json(token)
     } catch (error) {
         return res.status(500).json({ message: error.message });
 

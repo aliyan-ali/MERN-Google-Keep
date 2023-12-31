@@ -21,18 +21,17 @@ const NavbarRightSide = () => {
 
   // const userDisplayName =  useContext(ContextProvider);
   const router = useRouter();
-
     
-  const { user,setUser }= useContext(UserContext)
+  const { user,setUser,handleLayoutChange, }= useContext(UserContext)
 
-  const display = user?.name;
+  const display = user?.username;
 
 
-  // console.log(userDisplayName)
+
   
     function signout () {
         localStorage.removeItem('token');
-        // localStorage.removeItem('user');
+        localStorage.removeItem('user');
         toast.success("logging out")
         setUser(null)
         setTimeout(() => {
@@ -52,7 +51,12 @@ const NavbarRightSide = () => {
           Welcome: <span>{display}</span>
         </p>
         <HeaderIcon icon={refreshIcon} title="Refresh" alt="refresh-icon-svg" />
-        <HeaderIcon icon={viewlistIcon} title="List view" alt="view-icon-svg" />
+        <HeaderIcon
+          icon={viewlistIcon}
+          click={handleLayoutChange}
+          title="List view"
+          alt="view-icon-svg"
+        />
         <HeaderIcon
           icon={settingsIcon}
           title="Settings"
@@ -64,7 +68,9 @@ const NavbarRightSide = () => {
           title="user Account"
           alt="user-account-icon-svg"
         />
-        <button className="btn btn-logout" onClick={signout}>Logout</button>
+        <button className="btn btn-logout" onClick={signout}>
+          Logout
+        </button>
       </div>
     </>
   );
