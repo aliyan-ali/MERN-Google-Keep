@@ -272,6 +272,7 @@ const Card = () => {
         </div>
       </div>
       <div className={`notesGrid ${layout}`}>
+        {console.log(layout)}
         {filteredNotes.length > 0
           ? filteredNotes.map((note, index) => (
               <div

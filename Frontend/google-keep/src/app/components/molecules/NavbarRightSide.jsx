@@ -1,9 +1,10 @@
 // 'use client'
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Image from "next/image";
 import HeaderIcon from "../atoms/HeaderIcon";
 import refreshIcon from "../atoms/img/refreshIcon.svg";
 import viewlistIcon from "../atoms/img/viewlistIcon.svg";
+import gridIcon from "../atoms/img/grid.svg"
 import settingsIcon from "../atoms/img/settingsIcon.svg";
 import appsIcon from "../atoms/img/appsIcon.svg";
 import useraccountIcon from "../atoms/img/useraccountIcon.svg";
@@ -22,9 +23,11 @@ const NavbarRightSide = () => {
   // const userDisplayName =  useContext(ContextProvider);
   const router = useRouter();
     
-  const { user,setUser,handleLayoutChange, }= useContext(UserContext)
+  const { user, setUser, handleLayoutChange, layout } = useContext(UserContext);
 
   const display = user?.username;
+
+  const [currentIcon, setCurrentIcon] = useState(viewlistIcon);
 
 
 
@@ -39,9 +42,16 @@ const NavbarRightSide = () => {
           
         }, 4000);
         console.log("user logged out Successfully")
-
-
     }
+
+    useEffect(() => {
+      if (layout === "row") {
+        setCurrentIcon(viewlistIcon);
+      } else {
+        setCurrentIcon(gridIcon);
+      }
+    }, [layout]);
+    
 
     
   return (
@@ -52,7 +62,7 @@ const NavbarRightSide = () => {
         </p>
         <HeaderIcon icon={refreshIcon} title="Refresh" alt="refresh-icon-svg" />
         <HeaderIcon
-          icon={viewlistIcon}
+          icon={currentIcon}
           click={handleLayoutChange}
           title="List view"
           alt="view-icon-svg"
