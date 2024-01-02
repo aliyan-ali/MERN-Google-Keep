@@ -32,7 +32,7 @@ const NavbarRightSide = () => {
 
 
   
-    function signout () {
+    const signout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         toast.success("logging out")

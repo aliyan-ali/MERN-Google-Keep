@@ -1,8 +1,10 @@
 .note {
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
   margin-top: 90px;
+  max-height: 700px;
 }
 .take-note {
   border-radius: 8px;
@@ -30,7 +32,7 @@
 }
 .iconCom {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 /* .taken-note-icons {
@@ -42,7 +44,7 @@
   
 } */
 .taken-note-icons {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   opacity: 0;
   /* Start with opacity 0 */
@@ -115,7 +117,7 @@
 
 .btn button {
   font-size: 16px;
-  color: #000;
+  color: #222222;
   /* margin-right: 15px; */
   padding: 10px 10px;
   border-radius: 4px;
@@ -199,8 +201,6 @@
 
 .modalContent button {
   padding: 4px 13px;
-  /* background-color: #007bff; */
-  /* color: white; */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -370,7 +370,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 10px;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 }

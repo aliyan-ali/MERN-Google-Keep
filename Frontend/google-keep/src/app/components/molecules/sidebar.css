@@ -8,10 +8,14 @@
   height: calc(100vh);
   position: relative;
   overflow: hidden;
-  transition: width 0.5 ease-in-out;
+  transition: width 0.3s ease-in-out;
   background-color: white;
   top: 65px;
   position: fixed;
+}
+.left-side-bar p{
+  transition: opacity 0.3s ease;
+  opacity: 0;
 }
 .left-side-bar .license p {
   padding: 10px 15px;
@@ -25,4 +29,17 @@
 .left-side-bar:hover {
   width: 280px;
   box-shadow: 0px 0px 14px -4px  #000;
+}
+.left-side-bar:hover p{
+  opacity: 1;
+}
+.active {
+  background-color: #fdebb5 !important;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+}
+.active:hover {
+  background-color: #fdebb5 !important;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
 }

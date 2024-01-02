@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 
 export const UserContext = createContext();
@@ -11,43 +12,44 @@ function UserProvider({ children }) {
   const [token, setToken] = useState(null);
   const [layout, setLayout] = useState('row');
 
-  // const [exptoken, setExpToken] = useState(false);
+  const [exptoken, setExpToken] = useState(false);
   // console.log(user)
   useEffect(() => {
     const fetchedToken = localStorage.getItem('token');
     if (fetchedToken) {
       setToken(fetchedToken);
     } else {
+      // alert("please login to start creating notes")
       console.log('Token missing in local storage');
     }
   }, []);
 
-
+  
   const handleLayoutChange = () => {
     const newLayout =
       layout === "row" ? "column" : "row";
       setLayout(newLayout);
   };
-  //  useEffect(() => {
+   useEffect(() => {
 
-  //    if (token) {
-  //      try {
-  //        const decodedToken = jwtDecode(token); // You'll need a decoding mechanism for your tokens
-  //        const currentTime = Date.now() / 1000; // Get current time in seconds
-  //        if (decodedToken.exp < currentTime) {
-  //          setExpToken(true)
-  //          if (exptoken) {
-  //            localStorage.removeItem('token');
-  //            setUser(null);
-  //            setExpToken(false);
-  //          }
-  //        }
-  //      } catch (error) {
-  //        console.error('Error decoding token:', error);
-  //        console.log("true"); // If there's an error in decoding, consider it as an expired token
-  //      }
-  //    };
-  //  }, [exptoken])
+     if (token) {
+       try {
+         const decodedToken = jwtDecode(token); 
+         const currentTime = Date.now() / 1000; 
+         if (decodedToken.exp < currentTime) {
+           setExpToken(true)
+           if (exptoken) {
+             localStorage.removeItem('token');
+             setUser(null);
+             setExpToken(false);
+           }
+         }
+       } catch (error) {
+         console.error('Error decoding token:', error);
+         console.log("true"); // If there's an error in decoding, consider it as an expired token
+       }
+     };
+   }, [exptoken])
 
 
   //  useEffect(() => {
@@ -84,12 +86,18 @@ function UserProvider({ children }) {
     localStorage.setItem('user', JSON.stringify(user));
   }, [user]);
 
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token")
+  
+    
+  // }, [])
+  
   // console.log('logged in user is: ', user);
 
   return (
     <UserContext.Provider value={{
-      user, setUser, token, setToken, layout, handleLayoutChange
-    }}>
+      user, setUser, token, setToken, layout, handleLayoutChange, setExpToken, exptoken }}>
       {children}
     </UserContext.Provider>
   );

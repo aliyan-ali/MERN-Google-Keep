@@ -19,8 +19,11 @@ const noteSchema = new mongoose.Schema({
     imageUrl: {
         type: "string",
         default: "",
+    },deleted: {
+        type: "boolean",
+        default:false
     }
-})
+},{ timestamps: true })
 
 const Note = mongoose.model("Notes", noteSchema)
 export default Note;

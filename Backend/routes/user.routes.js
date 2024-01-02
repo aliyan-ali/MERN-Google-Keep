@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getAllUsers, forgetPassword, verifyOtp, saveNote, deleteNote, editNote, getSingleUserNotes, getAllNotes,  getSingleUser } from "../controllers/user.controller.js";
+import { register, login, getAllUsers, forgetPassword, verifyOtp, saveNote, editNote, getSingleUserNotes, getAllNotes, getSingleUser, perminentlyDeleteNote, deleteNote, getAllDeleteNote, getDeletedUserNotes, restoreNote } from "../controllers/user.controller.js";
 // import { createSetting, getAllSettings } from "../controllers/settings.controller.js";
 import { middlewareFunc } from "../Middleware/middleware.js"
 import multer from "multer"
@@ -38,9 +38,13 @@ const upload = multer({ storage });
 
 
 router.post("/user/add-note", upload.single("image"), saveNote)
-router.get("/user/get-note/:id" , middlewareFunc ,getSingleUserNotes);
-router.patch("/user/edit-note/:id", middlewareFunc,  editNote)
-router.delete("/user/delete-note/:id", middlewareFunc,  deleteNote)
+router.get("/user/get-note/:id", middlewareFunc, getSingleUserNotes);
+router.patch("/user/edit-note/:id", middlewareFunc, editNote)
+router.patch("/user/delete-note/:id", middlewareFunc, deleteNote)
+router.patch("/user/restore-note/:id", middlewareFunc, restoreNote)
+router.get("/user/get-delete-note/:id", middlewareFunc, getDeletedUserNotes);
+router.get("/user/all-delete-note", middlewareFunc, getAllDeleteNote)
+router.delete("/user/perminently-delete-note/:id", middlewareFunc, perminentlyDeleteNote)
 router.get("/user/get-all-notes", middlewareFunc, getAllNotes)
 // router.post("/setting", createSetting)
 // router.get("/setting", getAllSettings)
