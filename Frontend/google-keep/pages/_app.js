@@ -5,7 +5,6 @@ import  "./pages.css";
     return(
         <>
     <UserProvider>
-
         <Component {...pageProps} />
     </UserProvider>
         </>

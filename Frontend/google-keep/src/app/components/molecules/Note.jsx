@@ -22,12 +22,20 @@ const Card = () => {
   const [editNote, setEditNote] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const { user, layout } = useContext(UserContext);
+  const { user, layout, setExpToken, exptoken } = useContext(UserContext);
   const { searchQuery, filteredNotes, handleSearch, notes, setNotes } =
   useContext(SearchContext);
 
   const router = useRouter();
 
+
+  useEffect(() => {
+    if (exptoken === "true") {
+      toast.warning("session expired please login again");
+      console.log("toast")
+    }
+  }, [exptoken]);
+  
 
     const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -59,6 +67,7 @@ const Card = () => {
                       if (image) {
                         formData.append("image", image);
                       }
+        setExpToken(false);
         const response = await axios.post(
           "http://localhost:5599/api/user/add-note", formData, {
                 headers: {
@@ -66,13 +75,16 @@ const Card = () => {
                 }
               }
               );
+        // setImagePreview(null);
               // console.log("addeed note" + response.data);
       } catch (error) {
         // Handle error
+        setExpToken(null)
         console.error("Error adding note: ", error);
       }
       setTitle("");
       setContent("");
+      setImage(null);
       setImagePreview(null);
       getUserNotes();
     }
@@ -86,6 +98,7 @@ const Card = () => {
         try {
           const token = localStorage.getItem("token");
           console.log("Fetching notes for admin...");
+          setExpToken(false)
           const response = await axios.get(
             "http://localhost:5599/api/user/get-all-notes",
             {
@@ -97,9 +110,10 @@ const Card = () => {
 
           setNotes(response.data);
         } catch (error) {
+          setExpToken(null);
           console.error("Failed to fetch user notes", error.message);
-          if(err.status==="403"){
-            console.warn();("forbidden")
+          if(error ){
+            console.warn("forbidden", error)
           }
           return [];
         }
@@ -107,6 +121,7 @@ const Card = () => {
         console.log("Fetching notes for regular user...");
         try {
           const token = localStorage.getItem("token");
+          setExpToken(false);
           const response = await axios.get(
             `http://localhost:5599/api/user/get-note/${user._id}`,
             {
@@ -117,6 +132,7 @@ const Card = () => {
             );
             setNotes(response.data);
           } catch (error) {
+            setExpToken(false);
             console.error("Failed to fetch user notes", error.message);
 
           return [];
@@ -165,30 +181,58 @@ const Card = () => {
     }
   };
 
-  // delete note
+  //add to  deleted notes
+  // const handleDeleteNote = async (note) => {
+  //   if (editNote) {
+  //     if (note && user) {
+  //       try {
+  //         closeModal();
+  //         const token = localStorage.getItem("token");
+  //         const response = await axios.patch(
+  //           `http://localhost:5599/api/user/delete-note/${note._id}`,
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${token}`, 
+  //             },
+  //           }
+  //         );
+  //         console.log("Note deleted with ID: ", note);
+
+  //         getUserNotes();
+  //       } catch (error) {
+  //         console.error("Error deleting note: ", error);
+  //       }
+  //     }
+  //   }
+  // };
+
+
+
   const handleDeleteNote = async (note) => {
     if (editNote) {
       if (note && user) {
         try {
           closeModal();
           const token = localStorage.getItem("token");
-          const response = await axios.delete(
-            `http://localhost:5599/api/user/delete-note/${note._id}`,
+          const response = await axios.patch(
+            `http://localhost:5599/api/user/delete-note/${editNote._id}`,{
+
+            },
             {
               headers: {
-                Authorization: `Bearer ${token}`, // Add the bearer token here
+                Authorization: `Bearer ${token}`,
               },
             }
           );
-          console.log("Note deleted with ID: ", note.id);
-
-          getUserNotes();
+          console.log("Note deleted with ID: ", note);
+          getUserNotes(); 
         } catch (error) {
           console.error("Error deleting note: ", error);
         }
       }
     }
   };
+
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -272,7 +316,7 @@ const Card = () => {
         </div>
       </div>
       <div className={`notesGrid ${layout}`}>
-        {console.log(layout)}
+        {/* {console.log(layout)} */}
         {filteredNotes.length > 0
           ? filteredNotes.map((note, index) => (
               <div

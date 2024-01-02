@@ -22,7 +22,7 @@ export const register = async (req, res) => {
         const hashPassword = await bcrypt.hash(password, 10)
         const user = new User({ email, name,  password: hashPassword });
         await user.save();
-        const token = jsonwebtoken.sign({ _id: user._id, username: user.name, email: user.email, role: user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "1hr" })
+        const token = jsonwebtoken.sign({ _id: user._id, username: user.name, email: user.email, role: user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "2hr" })
         return res.status(200).json(token)
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -45,7 +45,7 @@ export const login = async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: "wrong password" })
         }
-        const token = jsonwebtoken.sign({ _id: user._id,  username: user.name,email:user.email,role:user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "1hr" })
+        const token = jsonwebtoken.sign({ _id: user._id,  username: user.name,email:user.email,role:user.role }, `${process.env.SECRET_KEY}`, { expiresIn: "2hr" })
         // return res.status(200).json({token, user})
         return res.status(200).json(token)
     } catch (error) {
@@ -92,7 +92,7 @@ export const saveNote = async (req, res) => {
             title,
             content,
             ownerId,
-            imageUrl // Example: assuming ownerId maps to the user who owns the note
+            imageUrl 
         });    
         await newNote.save(); // Save the new note
         res.status(200).json(newNote);
@@ -108,7 +108,7 @@ export const saveNote = async (req, res) => {
 export const getSingleUserNotes = async (req, res) => {
     try {
         const { id } = req.params;
-        const userNotes = await Note.find({ ownerId: id })
+        const userNotes = await Note.find({ ownerId: id, deleted: false })
         // console.log(id)
         // console.log(userNotes);
         if (!userNotes) {
@@ -121,6 +121,21 @@ export const getSingleUserNotes = async (req, res) => {
     }    
 }    
 
+//get deleted notes for user
+
+export const getDeletedUserNotes = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userNotes = await Note.find({ ownerId: id, deleted: true })
+        if (!userNotes) {
+            return res.status(404).json({ message: "User not found" })
+        }
+        return res.status(200).json(userNotes)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+
+    }
+}    
 
 
 //update Note 
@@ -136,11 +151,52 @@ export const editNote = async (req, res) => {
     }
 };
 
-//delete Note
+// move to deleted notes 
 
 export const deleteNote = async (req, res) => {
+    const { id } = req.params;
     try {
-        const { id } = req.params; // Extract note ID from the request parameters
+        const foundNoteIndex = await Note.findByIdAndUpdate(id, { deleted: true }, { new: true });
+        res.status(200).json({ foundNoteIndex });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message, error });
+    }
+};
+
+
+// restore notes
+
+export const restoreNote = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const foundNoteIndex = await Note.findByIdAndUpdate(id, { deleted: false }, { new: true });
+        res.status(200).json({ foundNoteIndex });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message, error });
+    }
+};
+
+
+
+//all notes moved to deleted
+
+export const getAllDeleteNote = async (req, res) => {
+    try {
+        const deletedNotes = await Note.find({ deleted: true })
+        res.status(200).json(deletedNotes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+//delete Note
+
+export const perminentlyDeleteNote = async (req, res) => {
+    try {
+        const { id } = req.params;
         await Note.findByIdAndDelete(id);
         res.status(200).json({ message: 'Note deleted successfully' });
     } catch (error) {
@@ -152,7 +208,7 @@ export const deleteNote = async (req, res) => {
 
 export const getAllNotes = async (req,res) => {
     try {
-        const notes = await Note.find()
+        const notes = await Note.find({deleted:false})
         if(!notes){
             return res.status(404).json({message:"no notes found"})
         }
