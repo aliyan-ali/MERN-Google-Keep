@@ -19,7 +19,7 @@ function SendOtp() {
         e.preventDefault();
         try {
             const response =await  axios.post(
-                "https://bright-calf-pantsuit.cyclic.app/api/user/forgot-password",{email: email}
+                "http://localhost:5599/api/user/forgot-password",{email: email}
                 );
                 console.log(" senting OTP to email:", email);
             console.log(response,email)
@@ -43,7 +43,7 @@ function SendOtp() {
     }else {
         try {
             const response = await axios.post(
-              "https://bright-calf-pantsuit.cyclic.app/api/user/reset-password",{
+              "http://localhost:5599/api/user/reset-password",{
                 email,
                 otp,
                 newPassword,

@@ -14,6 +14,7 @@ const password = process.env.PASSWORD;
 
 app.use(bodyParser.json())
 app.use(cors("*"));
+app.use(express.static("uploads"));
 // app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/api", userRoutes)
 app.use('/uploads', express.static('uploads'));
