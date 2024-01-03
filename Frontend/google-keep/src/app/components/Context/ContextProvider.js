@@ -11,9 +11,10 @@ function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [layout, setLayout] = useState('row');
-
   const [exptoken, setExpToken] = useState(false);
   // console.log(user)
+
+
   useEffect(() => {
     const fetchedToken = localStorage.getItem('token');
     if (fetchedToken) {
@@ -30,12 +31,14 @@ function UserProvider({ children }) {
       layout === "row" ? "column" : "row";
       setLayout(newLayout);
   };
+
+  //checking if token is expired and if so then saving value in expToken which is get inside mainSection to show toast for session expired
    useEffect(() => {
 
      if (token) {
        try {
          const decodedToken = jwtDecode(token); 
-         const currentTime = Date.now() / 1000; 
+         const currentTime = Date.now() / 1000; //divides currenttime by 1000 to convert from millisec  to sec. 
          if (decodedToken.exp < currentTime) {
            setExpToken(true)
            if (exptoken) {
@@ -45,8 +48,8 @@ function UserProvider({ children }) {
            }
          }
        } catch (error) {
-         console.error('Error decoding token:', error);
-         console.log("true"); // If there's an error in decoding, consider it as an expired token
+         console.warn('Error decoding token:', error);
+         console.log("true");
        }
      };
    }, [exptoken])
