@@ -24,7 +24,7 @@ function DeletedNotes() {
           console.log("Fetching notes for admin...");
           setExpToken(false);
           const response = await axios.get(
-            "http://localhost:5599/api/user/all-delete-note",
+            "https://bright-calf-pantsuit.cyclic.app/api/user/all-delete-note",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ function DeletedNotes() {
           const token = localStorage.getItem("token");
           setExpToken(false);
           const response = await axios.get(
-            `http://localhost:5599/api/user/get-delete-note/${user._id}`,
+            `https://bright-calf-pantsuit.cyclic.app/api/user/get-delete-note/${user._id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ function DeletedNotes() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.delete(
-          `http://localhost:5599/api/user/perminently-delete-note/${note._id}`,
+          `https://bright-calf-pantsuit.cyclic.app/api/user/perminently-delete-note/${note._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add the bearer token here
@@ -96,7 +96,7 @@ function DeletedNotes() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.patch(
-          `http://localhost:5599/api/user/restore-note/${note._id}`,{
+          `https://bright-calf-pantsuit.cyclic.app/api/user/restore-note/${note._id}`,{
 
           },
           {
@@ -149,7 +149,7 @@ function DeletedNotes() {
                 {note.imageUrl && (
                   <img
                     // src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                    src={`https://bright-calf-pantsuit.cyclic.app/uploads/${note.imageUrl}`}
                     alt="Selected"
                     className="preview-img"
                   />
@@ -182,7 +182,7 @@ function DeletedNotes() {
               <div key={index} className="note">
                 {note.imageUrl && (
                   <img
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                    src={`https://bright-calf-pantsuit.cyclic.app/uploads/${note.imageUrl}`}
                     alt="note image"
                     className="preview-img"
                   />

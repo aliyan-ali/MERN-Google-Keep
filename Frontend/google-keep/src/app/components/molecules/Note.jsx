@@ -69,7 +69,7 @@ const Card = () => {
                       }
         setExpToken(false);
         const response = await axios.post(
-          "http://localhost:5599/api/user/add-note", formData, {
+          "https://bright-calf-pantsuit.cyclic.app/api/user/add-note", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -100,7 +100,7 @@ const Card = () => {
           console.log("Fetching notes for admin...");
           setExpToken(false)
           const response = await axios.get(
-            "http://localhost:5599/api/user/get-all-notes",
+            "https://bright-calf-pantsuit.cyclic.app/api/user/get-all-notes",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -123,7 +123,7 @@ const Card = () => {
           const token = localStorage.getItem("token");
           setExpToken(false);
           const response = await axios.get(
-            `http://localhost:5599/api/user/get-note/${user._id}`,
+            `https://bright-calf-pantsuit.cyclic.app/api/user/get-note/${user._id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -157,7 +157,7 @@ const Card = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.patch(
-            `http://localhost:5599/api/user/edit-note/${editNote._id}`,
+            `https://bright-calf-pantsuit.cyclic.app/api/user/edit-note/${editNote._id}`,
             {
               title: editTitle,
               content: editContent,
@@ -215,7 +215,7 @@ const Card = () => {
           closeModal();
           const token = localStorage.getItem("token");
           const response = await axios.patch(
-            `http://localhost:5599/api/user/delete-note/${editNote._id}`,{
+            `https://bright-calf-pantsuit.cyclic.app/api/user/delete-note/${editNote._id}`,{
 
             },
             {
@@ -327,7 +327,7 @@ const Card = () => {
                 {note.imageUrl && (
                   <img
                     // src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                    src={`https://bright-calf-pantsuit.cyclic.app/uploads/${note.imageUrl}`}
                     alt="Selected"
                     className="preview-img"
                   />
@@ -357,7 +357,7 @@ const Card = () => {
               >
                 {note.imageUrl && (
                   <img
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                    src={`https://bright-calf-pantsuit.cyclic.app/uploads/${note.imageUrl}`}
                     alt="note image"
                     className="preview-img"
                   />

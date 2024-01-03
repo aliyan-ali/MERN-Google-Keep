@@ -23,7 +23,7 @@ function Login() {
           password
         };
         const response = await axios.post(
-          "http://localhost:5599/api/user/",
+          "https://bright-calf-pantsuit.cyclic.app/api/user/",
           userData
         );
         console.log(response);
