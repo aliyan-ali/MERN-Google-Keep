@@ -6,17 +6,39 @@ import { useRouter } from "next/navigation"; // Correct import
 import {UserContext, } from "../Context/ContextProvider";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [name, setName] = useState("");
   const router = useRouter();
-  const { user, setUser }= useContext(UserContext)
+  const { user, setUser }= useContext(UserContext);
+  const [formError, setFormError] = useState("");
 
   const handleSignup = async () => {
     try {
+      if ( email === "" || password === "" || repeatPassword === "" || name === "") {
+        setFormError("missing-values")
+        setTimeout(() => {
+          setFormError("")
+        }, 2000);
+                setName("");
+                setPassword("");
+                setRepeatPassword("");
+                setEmail("");
+
+      }else if( password !== repeatPassword){
+        toast.warn("please fill the required fields")
+        setFormError("Passords-not-match")  
+        setTimeout(() => {
+          setPassword("");
+          setFormError("");
+          setRepeatPassword("");
+        }, 2000);
+      }else{
         const userData = {
           name,
           email, 
@@ -37,18 +59,23 @@ function Login() {
         setName("");
         setPassword("");
         setEmail("");
-
-
+        setRepeatPassword("");
 
       console.log("User signed up:", decoded);
 
-      router.push("/Start");
+          
+      return router.push("/Start");;
+      }
+      toast.warn("Error signing up. Try again")
+      setTimeout(() => {
+        return setFormError("")
+      }, 3000);
     } catch (error) {
       console.error("Error signing up:", error);
+      toast.warn("Error signing up. Try again");
     }
   };
   const routeToLogin = ()=> {
-
       router.push("/Signin");
   }
 
@@ -60,11 +87,14 @@ function Login() {
         name={name}
         email={email}
         password={password}
+        repeatPassword={repeatPassword}
         setName={setName}
         setEmail={setEmail}
         setPassword={setPassword}
+        setRepeatPassword={setRepeatPassword}
         onSubmit={handleSignup}
         router={routeToLogin}
+        formError={formError}
       />
     </div>
   );
