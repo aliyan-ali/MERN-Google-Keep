@@ -36,7 +36,17 @@
     font-size: 1.4rem;
 }
 .p {
-    margin-top: 40px;
-    margin-left: 10px;
+    /* margin-top: 40px;
+    margin-left: 10px; */
     color: rgb(74, 74, 74);
+}
+.red {
+    color: rgb(195, 40, 40);
+}
+.check-err {
+    display: flex;
+        margin-top: 40px;
+            margin-left: 10px;
+            justify-content: space-between;
+            /* color: rgb(74, 74, 74); */
 }
