@@ -147,12 +147,13 @@ function DeletedNotes() {
           ? filteredNotes.map((note, index) => (
               <div key={index} className="note">
                 {note.imageUrl && (
-                  <img
-                    // src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    alt="Selected"
-                    className="preview-img"
-                  />
+                  <div className="note-img-container">
+                    <img
+                      src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                      alt="note image"
+                      className="note-preview-img"
+                    />
+                  </div>
                 )}
                 <h2>{note.title}</h2>
                 <p>{note.content}</p>
@@ -181,11 +182,13 @@ function DeletedNotes() {
           : notes.map((note, index) => (
               <div key={index} className="note">
                 {note.imageUrl && (
-                  <img
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    alt="note image"
-                    className="preview-img"
-                  />
+                  <div className="note-img-container">
+                    <img
+                      src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                      alt="note image"
+                      className="note-preview-img"
+                    />
+                  </div>
                 )}
                 <h2>{note.title}</h2>
                 <p>{note.content}</p>

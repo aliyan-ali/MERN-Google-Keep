@@ -8,9 +8,9 @@ import cors from "cors"
 dotenv.config();
 const app = express();
 const port = 5599 || process.env.PORT;
-
 const userName = process.env.USER;
 const password = process.env.PASSWORD;
+
 
 app.use(bodyParser.json())
 app.use(cors("*"));
