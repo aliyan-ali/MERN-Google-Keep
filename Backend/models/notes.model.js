@@ -1,26 +1,29 @@
 import mongoose from "mongoose";
 
+
+
+
 const noteSchema = new mongoose.Schema({
     ownerId: {
-        type: "string",
-        default: "",
+        type: "ObjectId",
+        ref: "User",
         require: true
     },
     title: {
-        type: "string",
+        type: String,
         default: "",
         // require: true,
     },
     content: {
-        type: "string",
+        type: String,
         default: "",
         // require: true
     },
     imageUrl: {
-        type: "string",
+        type: String,
         default: "",
     },deleted: {
-        type: "boolean",
+        type: Boolean,
         default:false
     }
 },{ timestamps: true })

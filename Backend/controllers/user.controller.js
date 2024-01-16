@@ -208,7 +208,7 @@ export const perminentlyDeleteNote = async (req, res) => {
 
 export const getAllNotes = async (req,res) => {
     try {
-        const notes = await Note.find({deleted:false})
+        const notes = await Note.find({ deleted: false }).populate("ownerId", "name email").exec();
         if(!notes){
             return res.status(404).json({message:"no notes found"})
         }

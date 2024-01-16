@@ -277,7 +277,9 @@ const Card = () => {
       ) : null}
       <div className="noteCard">
         {imagePreview && (
-          <img src={imagePreview} alt="Selected" className="preview-img" />
+          <div className="img-container">
+            <img src={imagePreview} alt="Selected" className="preview-img" />
+          </div>
         )}
         <input
           type="text"
@@ -317,6 +319,7 @@ const Card = () => {
       </div>
       <div className={`notesGrid ${layout}`}>
         {/* {console.log(layout)} */}
+
         {filteredNotes.length > 0
           ? filteredNotes.map((note, index) => (
               <div
@@ -324,13 +327,24 @@ const Card = () => {
                 className="note"
                 onClick={() => openEditModal(note)}
               >
+                {user && user.role === "admin" ? (
+                  <>
+                    <div
+                      className="alert alert-warning alert-dismissible fade show"
+                      role="alert"
+                    >
+                      <strong> Note of User </strong> ({note.ownerId?.name})
+                    </div>
+                  </>
+                ) : null}
                 {note.imageUrl && (
-                  <img
-                    // src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    alt="Selected"
-                    className="preview-img"
-                  />
+                  <div className="note-img-container">
+                    <img
+                      src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                      alt="note image"
+                      className="note-preview-img"
+                    />
+                  </div>
                 )}
                 <h2>{note.title}</h2>
                 <p>{note.content}</p>
@@ -355,12 +369,21 @@ const Card = () => {
                 className="note"
                 onClick={() => openEditModal(note)}
               >
+                {user && user.role === "admin" ? (
+                  <>
+                    <div className="">
+                      <strong> ({note.ownerId?.name})</strong>
+                    </div>
+                  </>
+                ) : null}
                 {note.imageUrl && (
-                  <img
-                    src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                    alt="note image"
-                    className="preview-img"
-                  />
+                  <div className="note-img-container">
+                    <img
+                      src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                      alt="note image"
+                      className="note-preview-img"
+                    />
+                  </div>
                 )}
                 <h2>{note.title}</h2>
                 <p>{note.content}</p>
