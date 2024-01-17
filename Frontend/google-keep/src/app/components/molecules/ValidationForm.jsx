@@ -25,7 +25,9 @@ function ValidationForm({
   return (
     <form className="signin-form" onSubmit={handleSubmit}>
       {wrongPassword ? (
-        <p className="wrong-password">Wrong password or email.</p>
+        <p className="wrong-password">
+          <strong>Wrong email or password.</strong>
+        </p>
       ) : null}
       <div className="sign-input">
         <SigninEmailInput email={email} setEmail={setEmail} />
