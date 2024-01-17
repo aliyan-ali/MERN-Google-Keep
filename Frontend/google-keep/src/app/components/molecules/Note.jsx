@@ -7,6 +7,7 @@ import paintIcon from "../atoms/img/paintIcon.svg";
 import imgIcon from "../atoms/img/imgIcon.svg";
 import archiveIcon from "../atoms/img/archiveIcon.svg";
 import moreIcon from "../atoms/img/moreIcon.svg";
+import deleteIcon from "../atoms/img/delete.svg";
 import { UserContext } from "../Context/ContextProvider";
 import axios from "axios";
 import { SearchContext } from "../Context/SearchProvider";
@@ -24,20 +25,18 @@ const Card = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const { user, layout, setExpToken, exptoken } = useContext(UserContext);
   const { searchQuery, filteredNotes, handleSearch, notes, setNotes } =
-  useContext(SearchContext);
+    useContext(SearchContext);
 
   const router = useRouter();
-
 
   useEffect(() => {
     if (exptoken === "true") {
       toast.warning("session expired please login again");
-      console.log("toast")
+      console.log("toast");
     }
   }, [exptoken]);
-  
 
-    const handleImageChange = (e) => {
+  const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
     const reader = new FileReader();
@@ -52,34 +51,35 @@ const Card = () => {
   const handleAddNote = async () => {
     if (!user) {
       console.log("Plese log in to add notes");
-      toast.warning("session expired please login again ")
+      toast.warning("session expired please login again ");
       // alert("please log in to add notes");
       setTimeout(() => {
         return router.push("/Signin");
-        
       }, 4000);
     } else if (user && (title || content)) {
       try {
         const formData = new FormData();
-                formData.append("ownerId", user?._id);
-                formData.append("title", title);
-                formData.append("content", content);
-                      if (image) {
-                        formData.append("image", image);
-                      }
+        formData.append("ownerId", user?._id);
+        formData.append("title", title);
+        formData.append("content", content);
+        if (image) {
+          formData.append("image", image);
+        }
         setExpToken(false);
         const response = await axios.post(
-          "http://localhost:5599/api/user/add-note", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-              }
-              );
+          "http://localhost:5599/api/user/add-note",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         // setImagePreview(null);
-              // console.log("addeed note" + response.data);
+        // console.log("addeed note" + response.data);
       } catch (error) {
         // Handle error
-        setExpToken(null)
+        setExpToken(null);
         console.error("Error adding note: ", error);
       }
       setTitle("");
@@ -98,7 +98,7 @@ const Card = () => {
         try {
           const token = localStorage.getItem("token");
           console.log("Fetching notes for admin...");
-          setExpToken(false)
+          setExpToken(false);
           const response = await axios.get(
             "http://localhost:5599/api/user/get-all-notes",
             {
@@ -112,8 +112,8 @@ const Card = () => {
         } catch (error) {
           setExpToken(null);
           console.error("Failed to fetch user notes", error.message);
-          if(error ){
-            console.warn("forbidden", error)
+          if (error) {
+            console.warn("forbidden", error);
           }
           return [];
         }
@@ -129,11 +129,11 @@ const Card = () => {
                 Authorization: `Bearer ${token}`,
               },
             }
-            );
-            setNotes(response.data);
-          } catch (error) {
-            setExpToken(false);
-            console.error("Failed to fetch user notes", error.message);
+          );
+          setNotes(response.data);
+        } catch (error) {
+          setExpToken(false);
+          console.error("Failed to fetch user notes", error.message);
 
           return [];
         }
@@ -143,7 +143,6 @@ const Card = () => {
   };
   useEffect(() => {
     getUserNotes();
-
   }, [user]);
 
   const handleEditNote = async () => {
@@ -168,7 +167,7 @@ const Card = () => {
               },
             }
           );
-          
+
           // console.log("Note updated with ID: ", user._id);
         } catch (error) {
           console.error("Error updating note: ", error);
@@ -192,7 +191,7 @@ const Card = () => {
   //           `http://localhost:5599/api/user/delete-note/${note._id}`,
   //           {
   //             headers: {
-  //               Authorization: `Bearer ${token}`, 
+  //               Authorization: `Bearer ${token}`,
   //             },
   //           }
   //         );
@@ -206,8 +205,6 @@ const Card = () => {
   //   }
   // };
 
-
-
   const handleDeleteNote = async (note) => {
     if (editNote) {
       if (note && user) {
@@ -215,9 +212,8 @@ const Card = () => {
           closeModal();
           const token = localStorage.getItem("token");
           const response = await axios.patch(
-            `http://localhost:5599/api/user/delete-note/${editNote._id}`,{
-
-            },
+            `http://localhost:5599/api/user/delete-note/${editNote._id}`,
+            {},
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -225,14 +221,13 @@ const Card = () => {
             }
           );
           console.log("Note deleted with ID: ", note);
-          getUserNotes(); 
+          getUserNotes();
         } catch (error) {
           console.error("Error deleting note: ", error);
         }
       }
     }
   };
-
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -358,50 +353,52 @@ const Card = () => {
                     <NoteIcons icon={paintIcon} alttxt="paintIcon-svg" />
                     <NoteIcons icon={imgIcon} alttxt="imgIcon-svg" />
                     <NoteIcons icon={archiveIcon} alttxt="archiveIcon-svg" />
-                    <NoteIcons icon={moreIcon} alttxt="moreIcon-svg" />
+                    <NoteIcons icon={deleteIcon} alttxt="moreIcon-svg" />
                   </div>
                 </div>
               </div>
             ))
-          : notes.map((note, index) => (
-              <div
-                key={index}
-                className="note"
-                onClick={() => openEditModal(note)}
-              >
-                {user && user.role === "admin" ? (
-                  <>
-                    <div className="">
-                      <strong> ({note.ownerId?.name})</strong>
+          : notes
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((note, index) => (
+                <div
+                  key={index}
+                  className="note"
+                  onClick={() => openEditModal(note)}
+                >
+                  {user && user.role === "admin" ? (
+                    <>
+                      <div className="">
+                        <strong> ({note.ownerId?.name})</strong>
+                      </div>
+                    </>
+                  ) : null}
+                  {note.imageUrl && (
+                    <div className="note-img-container">
+                      <img
+                        src={`http://localhost:5599/uploads/${note.imageUrl}`}
+                        alt="note image"
+                        className="note-preview-img"
+                      />
                     </div>
-                  </>
-                ) : null}
-                {note.imageUrl && (
-                  <div className="note-img-container">
-                    <img
-                      src={`http://localhost:5599/uploads/${note.imageUrl}`}
-                      alt="note image"
-                      className="note-preview-img"
-                    />
-                  </div>
-                )}
-                <h2>{note.title}</h2>
-                <p>{note.content}</p>
-                <div className="note_icon">
-                  <div className="iconCom">
-                    <NoteIcons icon={addIcon} alttxt="addIcon-svg" />
-                    <NoteIcons
-                      icon={personaddIcon}
-                      alttxt="personaddIcon-svg"
-                    />
-                    <NoteIcons icon={paintIcon} alttxt="paintIcon-svg" />
-                    <NoteIcons icon={imgIcon} alttxt="imgIcon-svg" />
-                    <NoteIcons icon={archiveIcon} alttxt="archiveIcon-svg" />
-                    <NoteIcons icon={moreIcon} alttxt="moreIcon-svg" />
+                  )}
+                  <h2>{note.title}</h2>
+                  <p>{note.content}</p>
+                  <div className="note_icon">
+                    <div className="iconCom">
+                      <NoteIcons icon={addIcon} alttxt="addIcon-svg" />
+                      <NoteIcons
+                        icon={personaddIcon}
+                        alttxt="personaddIcon-svg"
+                      />
+                      <NoteIcons icon={paintIcon} alttxt="paintIcon-svg" />
+                      <NoteIcons icon={imgIcon} alttxt="imgIcon-svg" />
+                      <NoteIcons icon={archiveIcon} alttxt="archiveIcon-svg" />
+                      <NoteIcons icon={deleteIcon} alttxt="moreIcon-svg" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
         {isModalOpen && (
           <div className="modalOverlay">
             <div className="modalContent" onClick={(e) => e.stopPropagation()}>
@@ -423,15 +420,20 @@ const Card = () => {
                 <NoteIcons icon={paintIcon} alttxt="paintIcon-svg" />
                 <NoteIcons icon={imgIcon} alttxt="imgIcon-svg" />
                 <NoteIcons icon={archiveIcon} alttxt="archiveIcon-svg" />
-                <NoteIcons icon={moreIcon} alttxt="moreIcon-svg" />
-                <span
+                <div
+                  onClick={() => handleDeleteNote(editNote)}
+                  className="delete-container"
+                >
+                  <NoteIcons icon={deleteIcon} alttxt="moreIcon-svg" />
+                </div>
+                {/* <span
                   className="d-btn"
                   onClick={() => {
                     handleDeleteNote(editNote);
                   }}
                 >
                   Delete
-                </span>
+                </span> */}
                 <span className="closeButton" onClick={handlecloseandsave}>
                   Close
                 </span>

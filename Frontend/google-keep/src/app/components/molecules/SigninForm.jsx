@@ -60,7 +60,9 @@ function SigninForm({
           <div className="check-err">
             <p className="p">Allready have an account?</p>
             {formError === "Passords-not-match" && (
-              <p className="red">Passwords not match</p>
+              <p className="red">
+                <strong>Passwords not match</strong>
+              </p>
             )}
           </div>
           <button

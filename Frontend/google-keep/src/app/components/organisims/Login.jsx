@@ -31,7 +31,7 @@ function Login() {
                 setEmail("");
 
       }else if( password !== repeatPassword){
-        toast.warn("please fill the required fields")
+        // toast.warn("please fill the required fields")
         setFormError("Passords-not-match")  
         setTimeout(() => {
           setPassword("");
@@ -66,13 +66,13 @@ function Login() {
           
       return router.push("/Start");;
       }
-      toast.warn("Error signing up. Try again")
+      // toast.warn("Error signing up. Try again")
       setTimeout(() => {
         return setFormError("")
       }, 3000);
     } catch (error) {
       console.error("Error signing up:", error);
-      toast.warn("Error signing up. Try again");
+      // toast.warn("Error signing up. Try again");
     }
   };
   const routeToLogin = ()=> {

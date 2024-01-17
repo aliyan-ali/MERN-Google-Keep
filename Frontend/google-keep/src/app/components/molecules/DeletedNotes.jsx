@@ -11,8 +11,7 @@ import { ToastContainer,toast } from "react-toastify";
 
 function DeletedNotes() {
   const { user, layout, setExpToken, exptoken } = useContext(UserContext);
-  const { searchQuery, filteredNotes, handleSearch, notes, setNotes } =
-    useContext(SearchContext);
+  const { searchQuery, filteredNotes, handleSearch, notes, setNotes } = useContext(SearchContext);
 
   //get all notes for admin
   const getUserDeletedNotes = async () => {
@@ -140,6 +139,12 @@ function DeletedNotes() {
       ) : null}
       <div className="title-delete">
         <p>Delete notes to delete perminently</p>
+        {/* <button>Empty Trash</button> */}
+        {notes.length > 0 && (
+          <button onClick={() => console.log("Empty Trash clicked")}>
+            Empty Trash
+          </button>
+        )}
       </div>
       <div className={`notesGrid ${layout}`}>
         {/* {console.log(layout)} */}
