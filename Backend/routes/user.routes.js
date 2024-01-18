@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, getAllUsers, forgetPassword, verifyOtp, saveNote, editNote, getSingleUserNotes, getAllNotes, getSingleUser, perminentlyDeleteNote, deleteNote, getAllDeleteNote, getDeletedUserNotes, restoreNote } from "../controllers/user.controller.js";
+import { register, login, getAllUsers, forgetPassword, verifyOtp, saveNote, editNote, getSingleUserNotes, getAllNotes, getSingleUser, perminentlyDeleteNote, deleteNote, getAllDeleteNote, getDeletedUserNotes, restoreNote, perminentlyDeleteAllNotes } from "../controllers/user.controller.js";
 // import { createSetting, getAllSettings } from "../controllers/settings.controller.js";
 import { middlewareFunc } from "../Middleware/middleware.js"
 import multer from "multer"
@@ -45,6 +45,7 @@ router.patch("/user/restore-note/:id", middlewareFunc, restoreNote)
 router.get("/user/get-delete-note/:id", middlewareFunc, getDeletedUserNotes);
 router.get("/user/all-delete-note", middlewareFunc, getAllDeleteNote)
 router.delete("/user/perminently-delete-note/:id", middlewareFunc, perminentlyDeleteNote)
+router.delete("/user/perminently-delete-all-notes/:id", middlewareFunc, perminentlyDeleteAllNotes)
 router.get("/user/get-all-notes", middlewareFunc, getAllNotes)
 // router.post("/setting", createSetting)
 // router.get("/setting", getAllSettings)

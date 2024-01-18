@@ -6,13 +6,14 @@ import restoreIcon from "../atoms/img/restore.svg";
 import { UserContext } from "../Context/ContextProvider";
 import axios from "axios";
 import { SearchContext } from "../Context/SearchProvider";
-import { ToastContainer,toast } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
 
 function DeletedNotes() {
   const { user, layout, setExpToken, exptoken } = useContext(UserContext);
-  const { searchQuery, filteredNotes, handleSearch, notes, setNotes } = useContext(SearchContext);
-
+  const { searchQuery, filteredNotes, handleSearch, notes, setNotes } =
+      useContext(SearchContext);
+  const [deleteNotes, setDeleteNotes] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
   //get all notes for admin
   const getUserDeletedNotes = async () => {
     if (user) {
@@ -68,24 +69,24 @@ function DeletedNotes() {
   // delete note
   const handleDeleteNote = async (note) => {
     console.log(note._id);
-    if (note && user) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.delete(
-          `http://localhost:5599/api/user/perminently-delete-note/${note._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Add the bearer token here
-            },
-          }
-        );
-        console.log("Note deleted with ID: ", note._id);
-
-        getUserDeletedNotes();
-      } catch (error) {
-        console.error("Error deleting note: ", error);
+      if (note && user) {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await axios.delete(
+            `http://localhost:5599/api/user/perminently-delete-note/${note._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Add the bearer token here
+              },
+            }
+          );
+          console.log("Note deleted with ID: ", note._id);
+          toast.warn("Note deleted");
+          getUserDeletedNotes();
+        } catch (error) {
+          console.error("Error deleting note: ", error);
+        }
       }
-    }
   };
 
   // restore note
@@ -95,9 +96,8 @@ function DeletedNotes() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.patch(
-          `http://localhost:5599/api/user/restore-note/${note._id}`,{
-
-          },
+          `http://localhost:5599/api/user/restore-note/${note._id}`,
+          {},
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add the bearer token here
@@ -105,12 +105,44 @@ function DeletedNotes() {
           }
         );
         console.log("Note restore with ID: ", note._id);
-
+        toast.success("Note restored");
         getUserDeletedNotes();
       } catch (error) {
         console.error("Error restore note: ", error);
       }
     }
+  };
+  
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const deleteAllNotes = async () => {
+    if (notes && user) {
+      try {
+        console.log(user._id);
+        const token = localStorage.getItem("token");
+        const response = await axios.delete(
+          `http://localhost:5599/api/user/perminently-delete-all-notes/${user._id}`,
+
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Empty recycle bin for : ", user.email);
+        getUserDeletedNotes();
+      } catch (error) {
+        console.error("Error deleting note: ", error);
+      }
+    }
+    setModalOpen(false);
   };
 
   useEffect(() => {
@@ -141,9 +173,8 @@ function DeletedNotes() {
         <p>Delete notes to delete perminently</p>
         {/* <button>Empty Trash</button> */}
         {notes.length > 0 && (
-          <button onClick={() => console.log("Empty Trash clicked")}>
-            Empty Trash
-          </button>
+          // <button onClick={() => deleteAllNotes()}>
+          <button onClick={openModal}>Empty Trash</button>
         )}
       </div>
       <div className={`notesGrid ${layout}`}>
@@ -219,6 +250,23 @@ function DeletedNotes() {
                 </div>
               </div>
             ))}
+        {isModalOpen && (
+          <div className="modalOverlay">
+            <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+              <h2 className="modal-titlee ">
+                Empty trash? All notes in Trash will be permanently deleted.
+              </h2>
+              <div className="iconComm">
+                <span className="closeButton" onClick={() => closeModal()}>
+                  Cancel
+                </span>
+                <span className="d-btn" onClick={() => deleteAllNotes()}>
+                  Empty Trash
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
