@@ -204,6 +204,23 @@ export const perminentlyDeleteNote = async (req, res) => {
     }
 };
 
+
+//delete all Notes
+
+export const perminentlyDeleteAllNotes = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Note.deleteMany({ownerId:id, deleted:true});
+        // if (deletedNotes.length > 0) {
+        //     deletedNotes.deleteMany({ ownerId: id, deleted: true });
+            return res.status(200).json({ message: 'Notes deleted successfully' });
+        // }
+        // return res.status(404).json({ message: 'Notes not found' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 //get all notes
 
 export const getAllNotes = async (req,res) => {
